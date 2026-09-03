@@ -9,4 +9,6 @@ sealed class Screen(val route: String) {
     object Devices : Screen("devices")
     object History : Screen("history")
     object Transfer : Screen("transfer")
+    object ShareToPC : Screen("share_to_pc")
+    object QRScanner : Screen("qr_scanner")
 }

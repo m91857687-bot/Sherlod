@@ -31,7 +31,9 @@ fun AppNavigation(
                 onNavigateToApps = { navController.navigate(Screen.Apps.route) },
                 onNavigateToFiles = { navController.navigate(Screen.Files.route) },
                 onNavigateToDevices = { navController.navigate(Screen.Devices.route) },
-                onNavigateToHistory = { navController.navigate(Screen.History.route) }
+                onNavigateToHistory = { navController.navigate(Screen.History.route) },
+                onNavigateToSharePC = { navController.navigate(Screen.ShareToPC.route) },
+                onNavigateToQRScanner = { navController.navigate(Screen.QRScanner.route) }
             )
         }
         composable(Screen.Send.route) {
