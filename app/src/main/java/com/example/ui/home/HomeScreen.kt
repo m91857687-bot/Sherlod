@@ -9,7 +9,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.Folder
@@ -62,7 +62,7 @@ fun HomeScreen(
             ) {
                 ActionCard(
                     title = "إرسال",
-                    icon = Icons.Default.Send,
+                    icon = Icons.AutoMirrored.Filled.Send,
                     onClick = onNavigateToSend,
                     modifier = Modifier.weight(1f)
                 )

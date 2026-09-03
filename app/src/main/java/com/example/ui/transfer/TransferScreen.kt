@@ -22,7 +22,7 @@ fun TransferScreen(onBack: () -> Unit) {
         ) {
             Text("إرسال إلى: 📱 Galaxy A55", style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.height(16.dp))
-            LinearProgressIndicator(progress = 0.74f, modifier = Modifier.fillMaxWidth().height(8.dp))
+            LinearProgressIndicator(progress = { 0.74f }, modifier = Modifier.fillMaxWidth().height(8.dp))
             Spacer(modifier = Modifier.height(8.dp))
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text("3.7 GB / 5 GB")
@@ -32,7 +32,7 @@ fun TransferScreen(onBack: () -> Unit) {
             Text("متبقي تقريبًا: 16 ثانية", style = MaterialTheme.typography.bodySmall)
 
             Spacer(modifier = Modifier.height(24.dp))
-            Divider()
+            HorizontalDivider()
             Spacer(modifier = Modifier.height(8.dp))
 
             LazyColumn(modifier = Modifier.fillMaxSize()) {

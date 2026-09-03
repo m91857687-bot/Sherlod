@@ -27,8 +27,14 @@ jobs:
     - name: Fix KSP in-process issue on CI
       run: sed -i 's/kotlin.compiler.execution.strategy=in-process/kotlin.compiler.execution.strategy=out-of-process/g' gradle.properties
 
+    - name: Generate Debug Keystore
+      run: |
+        if [ ! -f "debug.keystore" ]; then
+          keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+        fi
+
     - name: Build with Gradle
-      run: ./gradlew assembleDebug
+      run: ./gradlew assembleDebug -Djava.awt.headless=true --no-daemon
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
