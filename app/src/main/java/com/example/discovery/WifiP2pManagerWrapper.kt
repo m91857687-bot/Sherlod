@@ -21,10 +21,10 @@ class WifiP2pManagerWrapper(private val context: Context) {
     private val manager: WifiP2pManager? by lazy(LazyThreadSafetyMode.NONE) {
         context.getSystemService(Context.WIFI_P2P_SERVICE) as WifiP2pManager?
     }
-    private var channel: WifiP2pManager.Channel? = null
+    private var wifiChannel: WifiP2pManager.Channel? = null
 
     init {
-        channel = manager?.initialize(context, Looper.getMainLooper(), null)
+        wifiChannel = manager?.initialize(context, Looper.getMainLooper(), null)
     }
 
     val intentFilter = IntentFilter().apply {
@@ -36,17 +36,18 @@ class WifiP2pManagerWrapper(private val context: Context) {
 
     @SuppressLint("MissingPermission")
     fun discoverPeers(): Flow<List<WifiP2pDevice>> = callbackFlow {
+        val p2pChannel = wifiChannel
         val receiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION == intent.action) {
-                    manager?.requestPeers(channel) { peers: WifiP2pDeviceList? ->
+                    manager?.requestPeers(p2pChannel) { peers: WifiP2pDeviceList? ->
                         trySend(peers?.deviceList?.toList() ?: emptyList())
                     }
                 }
             }
         }
         context.registerReceiver(receiver, intentFilter)
-        manager?.discoverPeers(channel, object : WifiP2pManager.ActionListener {
+        manager?.discoverPeers(p2pChannel, object : WifiP2pManager.ActionListener {
             override fun onSuccess() {}
             override fun onFailure(reasonCode: Int) {
                 trySend(emptyList())
@@ -54,12 +55,13 @@ class WifiP2pManagerWrapper(private val context: Context) {
         })
         awaitClose {
             context.unregisterReceiver(receiver)
-            manager?.stopPeerDiscovery(channel, null)
+            manager?.stopPeerDiscovery(p2pChannel, null)
         }
     }
 
     @SuppressLint("MissingPermission")
     fun connectToPeer(device: WifiP2pDevice): Flow<WifiP2pInfo?> = callbackFlow {
+        val p2pChannel = wifiChannel
         val config = WifiP2pConfig().apply {
             deviceAddress = device.deviceAddress
         }
@@ -67,7 +69,7 @@ class WifiP2pManagerWrapper(private val context: Context) {
         val receiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION == intent.action) {
-                    manager?.requestConnectionInfo(channel) { info ->
+                    manager?.requestConnectionInfo(p2pChannel) { info ->
                         trySend(info)
                     }
                 }
@@ -75,7 +77,7 @@ class WifiP2pManagerWrapper(private val context: Context) {
         }
         context.registerReceiver(receiver, intentFilter)
 
-        manager?.connect(channel, config, object : WifiP2pManager.ActionListener {
+        manager?.connect(p2pChannel, config, object : WifiP2pManager.ActionListener {
             override fun onSuccess() {}
             override fun onFailure(reason: Int) {
                 trySend(null)
@@ -88,6 +90,6 @@ class WifiP2pManagerWrapper(private val context: Context) {
     }
     
     fun disconnect() {
-        manager?.removeGroup(channel, null)
+        manager?.removeGroup(wifiChannel, null)
     }
 }

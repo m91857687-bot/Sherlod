@@ -24,6 +24,9 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew || true
 
+    - name: Fix KSP in-process issue on CI
+      run: sed -i 's/kotlin.compiler.execution.strategy=in-process/kotlin.compiler.execution.strategy=out-of-process/g' gradle.properties
+
     - name: Build with Gradle
       run: ./gradlew assembleDebug
 
