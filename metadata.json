@@ -1,0 +1,6 @@
+{
+  "name": "ShareLoad",
+  "description": "Fast. Private. Nearby. A high performance file transfer app for Android.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
